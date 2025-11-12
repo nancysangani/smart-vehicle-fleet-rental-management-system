@@ -3,6 +3,7 @@ package com.fleet.dao;
 import com.fleet.model.Admin;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -14,51 +15,100 @@ public class AdminDAOImpl implements AdminDAO {
     @Autowired
     private SessionFactory sessionFactory;
 
-    private Session getSession() {
-        return sessionFactory.getCurrentSession();
-    }
-
     @Override
     public void save(Admin admin) {
-        getSession().save(admin);
+        Session session = sessionFactory.openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.save(admin);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            throw e;
+        } finally {
+            session.close();
+        }
     }
 
     @Override
     public Admin findById(Long id) {
-        return getSession().get(Admin.class, id);
+        Session session = sessionFactory.openSession();
+        try {
+            return session.get(Admin.class, id);
+        } finally {
+            session.close();
+        }
     }
 
     @Override
     public Admin findByUsername(String username) {
-        Query<Admin> query = getSession().createQuery("FROM Admin WHERE username = :username", Admin.class);
-        query.setParameter("username", username);
-        return query.uniqueResult();
+        Session session = sessionFactory.openSession();
+        try {
+            Query<Admin> query = session.createQuery("FROM Admin WHERE username = :username", Admin.class);
+            query.setParameter("username", username);
+            return query.uniqueResult();
+        } finally {
+            session.close();
+        }
     }
 
     @Override
     public List<Admin> findAll() {
-        return getSession().createQuery("FROM Admin", Admin.class).list();
+        Session session = sessionFactory.openSession();
+        try {
+            return session.createQuery("FROM Admin", Admin.class).list();
+        } finally {
+            session.close();
+        }
     }
 
     @Override
     public void update(Admin admin) {
-        getSession().update(admin);
+        Session session = sessionFactory.openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.update(admin);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            throw e;
+        } finally {
+            session.close();
+        }
     }
 
     @Override
     public void delete(Long id) {
-        Admin admin = findById(id);
-        if (admin != null) {
-            getSession().delete(admin);
+        Session session = sessionFactory.openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            Admin admin = session.get(Admin.class, id);
+            if (admin != null) {
+                session.delete(admin);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            throw e;
+        } finally {
+            session.close();
         }
     }
 
     @Override
     public Admin authenticate(String username, String password) {
-        Query<Admin> query = getSession().createQuery(
-            "FROM Admin WHERE username = :username AND password = :password", Admin.class);
-        query.setParameter("username", username);
-        query.setParameter("password", password);
-        return query.uniqueResult();
+        Session session = sessionFactory.openSession();
+        try {
+            Query<Admin> query = session.createQuery(
+                "FROM Admin WHERE username = :username AND password = :password", Admin.class);
+            query.setParameter("username", username);
+            query.setParameter("password", password);
+            return query.uniqueResult();
+        } finally {
+            session.close();
+        }
     }
 }

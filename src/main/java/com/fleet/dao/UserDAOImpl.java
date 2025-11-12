@@ -3,6 +3,7 @@ package com.fleet.dao;
 import com.fleet.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,57 +16,150 @@ public class UserDAOImpl implements UserDAO {
     private SessionFactory sessionFactory;
 
     private Session getSession() {
-        return sessionFactory.getCurrentSession();
+        try {
+            return sessionFactory.getCurrentSession();
+        } catch (Exception e) {
+            return sessionFactory.openSession();
+        }
     }
 
     @Override
     public void save(User user) {
-        getSession().save(user);
+        Session session = null;
+        Transaction tx = null;
+        try {
+            session = sessionFactory.getCurrentSession();
+            session.save(user);
+        } catch (Exception e) {
+            session = sessionFactory.openSession();
+            tx = session.beginTransaction();
+            session.save(user);
+            tx.commit();
+            session.close();
+        }
     }
 
     @Override
     public User findById(Long id) {
-        return getSession().get(User.class, id);
+        Session session = null;
+        try {
+            session = sessionFactory.getCurrentSession();
+            return session.get(User.class, id);
+        } catch (Exception e) {
+            session = sessionFactory.openSession();
+            User user = session.get(User.class, id);
+            session.close();
+            return user;
+        }
     }
 
     @Override
     public User findByUsername(String username) {
-        Query<User> query = getSession().createQuery("FROM User WHERE username = :username", User.class);
-        query.setParameter("username", username);
-        return query.uniqueResult();
+        Session session = null;
+        try {
+            session = sessionFactory.getCurrentSession();
+            Query<User> query = session.createQuery("FROM User WHERE username = :username", User.class);
+            query.setParameter("username", username);
+            return query.uniqueResult();
+        } catch (Exception e) {
+            session = sessionFactory.openSession();
+            Query<User> query = session.createQuery("FROM User WHERE username = :username", User.class);
+            query.setParameter("username", username);
+            User user = query.uniqueResult();
+            session.close();
+            return user;
+        }
     }
 
     @Override
     public User findByEmail(String email) {
-        Query<User> query = getSession().createQuery("FROM User WHERE email = :email", User.class);
-        query.setParameter("email", email);
-        return query.uniqueResult();
+        Session session = null;
+        try {
+            session = sessionFactory.getCurrentSession();
+            Query<User> query = session.createQuery("FROM User WHERE email = :email", User.class);
+            query.setParameter("email", email);
+            return query.uniqueResult();
+        } catch (Exception e) {
+            session = sessionFactory.openSession();
+            Query<User> query = session.createQuery("FROM User WHERE email = :email", User.class);
+            query.setParameter("email", email);
+            User user = query.uniqueResult();
+            session.close();
+            return user;
+        }
     }
 
     @Override
     public List<User> findAll() {
-        return getSession().createQuery("FROM User", User.class).list();
+        Session session = null;
+        try {
+            session = sessionFactory.getCurrentSession();
+            return session.createQuery("FROM User", User.class).list();
+        } catch (Exception e) {
+            session = sessionFactory.openSession();
+            List<User> users = session.createQuery("FROM User", User.class).list();
+            session.close();
+            return users;
+        }
     }
 
     @Override
     public void update(User user) {
-        getSession().update(user);
+        Session session = null;
+        Transaction tx = null;
+        try {
+            session = sessionFactory.getCurrentSession();
+            session.update(user);
+        } catch (Exception e) {
+            session = sessionFactory.openSession();
+            tx = session.beginTransaction();
+            session.update(user);
+            tx.commit();
+            session.close();
+        }
     }
 
     @Override
     public void delete(Long id) {
-        User user = findById(id);
-        if (user != null) {
-            getSession().delete(user);
+        Session session = null;
+        Transaction tx = null;
+        try {
+            session = sessionFactory.getCurrentSession();
+            User user = session.get(User.class, id);
+            if (user != null) {
+                session.delete(user);
+            }
+        } catch (Exception e) {
+            session = sessionFactory.openSession();
+            tx = session.beginTransaction();
+            User user = session.get(User.class, id);
+            if (user != null) {
+                session.delete(user);
+            }
+            tx.commit();
+            session.close();
         }
     }
 
     @Override
     public User authenticate(String username, String password) {
-        Query<User> query = getSession().createQuery(
-            "FROM User WHERE username = :username AND password = :password", User.class);
-        query.setParameter("username", username);
-        query.setParameter("password", password);
-        return query.uniqueResult();
+        Session session = null;
+        try {
+            session = sessionFactory.getCurrentSession();
+            Query<User> query = session.createQuery(
+                "FROM User WHERE username = :username AND password = :password", User.class);
+            query.setParameter("username", username);
+            query.setParameter("password", password);
+            return query.uniqueResult();
+        } catch (Exception e) {
+            session = sessionFactory.openSession();
+            Query<User> query = session.createQuery(
+                "FROM User WHERE username = :username AND password = :password", User.class);
+            query.setParameter("username", username);
+            query.setParameter("password", password);
+            User user = query.uniqueResult();
+            session.close();
+            return user;
+        }
     }
 }

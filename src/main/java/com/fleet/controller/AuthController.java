@@ -67,18 +67,22 @@ public class AuthController {
                           @RequestParam String email,
                           @RequestParam String fullName,
                           @RequestParam String phone,
-                          Model model) {
+                          Model model,
+                          HttpSession session) {
         try {
-            if (userService.getUserByUsername(username) != null) {
+            User existingUser = userService.getUserByUsername(username);
+            if (existingUser != null) {
                 model.addAttribute("error", "Username already exists");
                 return "register";
             }
             
             User user = new User(username, password, email, fullName, phone);
             userService.registerUser(user);
-            model.addAttribute("success", "Registration successful! Please login.");
-            return "login";
+            
+            session.setAttribute("success", "Registration successful! Please login.");
+            return "redirect:/login";
         } catch (Exception e) {
+            e.printStackTrace();
             model.addAttribute("error", "Registration failed: " + e.getMessage());
             return "register";
         }
