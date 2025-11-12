@@ -29,7 +29,6 @@ com\fleet\model\Admin.class
 com\fleet\model\Booking.class
 com\fleet\swing\AdminDashboard$1.class
 com\fleet\service\AdminServiceImpl.class
-com\fleet\config\WebAppInitializer.class
 com\fleet\config\AppConfig.class
 com\fleet\controller\VehicleController.class
 com\fleet\swing\AdminLogin.class
