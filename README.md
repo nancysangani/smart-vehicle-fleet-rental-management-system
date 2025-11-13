@@ -145,13 +145,13 @@ mvn exec:java -Dexec.mainClass="com.fleet.swing.AdminLogin"
 ## 👥 Default Credentials
 
 ### Web Application (Users)
-- **Username:** john_doe
-- **Password:** password123
+- **Username:** admin
+- **Password:** admin123
 
 OR
 
-- **Username:** jane_smith
-- **Password:** password123
+- **Username:** nancy29
+- **Password:** nancy29
 
 ### Desktop Application (Admins)
 - **Username:** admin
