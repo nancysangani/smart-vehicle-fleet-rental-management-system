@@ -139,7 +139,7 @@ The application will start at: **http://localhost:8080/fleet**
 In a new terminal:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.fleet.swing.AdminLogin"
+mvn exec:java "-Dexec.mainClass=com.fleet.swing.AdminLogin"
 ```
 
 ## 👥 Default Credentials
