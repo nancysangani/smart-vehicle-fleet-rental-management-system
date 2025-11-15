@@ -1,15 +1,32 @@
 package com.fleet.swing;
 
-import com.fleet.model.Admin;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import com.fleet.model.Admin;
 
 public class AdminLogin extends JFrame {
     
@@ -78,6 +95,7 @@ public class AdminLogin extends JFrame {
         usernameField.setPreferredSize(new Dimension(250, 35));
         gbc.gridx = 1;
         gbc.gridy = 0;
+        gbc.weightx = 1.0;
         formPanel.add(usernameField, gbc);
 
         JLabel passwordLabel = new JLabel("Password:");
@@ -91,6 +109,7 @@ public class AdminLogin extends JFrame {
         passwordField.setPreferredSize(new Dimension(250, 35));
         gbc.gridx = 1;
         gbc.gridy = 1;
+        gbc.weightx = 1.0;
         formPanel.add(passwordField, gbc);
 
         loginButton = new JButton("Login");
