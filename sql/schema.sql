@@ -2,7 +2,6 @@
 CREATE DATABASE IF NOT EXISTS fleet_management;
 USE fleet_management;
 
--- Users Table
 CREATE TABLE IF NOT EXISTS users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -13,7 +12,6 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Admins Table
 CREATE TABLE IF NOT EXISTS admins (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -23,7 +21,6 @@ CREATE TABLE IF NOT EXISTS admins (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Vehicles Table
 CREATE TABLE IF NOT EXISTS vehicles (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     make VARCHAR(50) NOT NULL,
@@ -41,7 +38,6 @@ CREATE TABLE IF NOT EXISTS vehicles (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Bookings Table
 CREATE TABLE IF NOT EXISTS bookings (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
@@ -55,12 +51,10 @@ CREATE TABLE IF NOT EXISTS bookings (
     FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE
 );
 
--- Sample Admin Data
 INSERT INTO admins (username, password, email, full_name) VALUES
 ('admin', 'admin123', 'admin@fleet.com', 'System Administrator'),
 ('manager', 'manager123', 'manager@fleet.com', 'Fleet Manager');
 
--- Sample Vehicle Data
 INSERT INTO vehicles (make, model, year, license_plate, vehicle_type, fuel_type, transmission, seating_capacity, daily_rate, status, image_url, description) VALUES
 ('Toyota', 'Camry', 2023, 'ABC-1234', 'Sedan', 'Petrol', 'Automatic', 5, 45.00, 'AVAILABLE', '/resources/images/vehicles/Toyota-Camry.jpg', 'Comfortable mid-size sedan with excellent fuel efficiency'),
 ('Honda', 'CR-V', 2023, 'XYZ-5678', 'SUV', 'Hybrid', 'Automatic', 7, 65.00, 'AVAILABLE', '/resources/images/vehicles/Honda-CR-V.jpg', 'Spacious SUV perfect for family trips'),
@@ -70,7 +64,6 @@ INSERT INTO vehicles (make, model, year, license_plate, vehicle_type, fuel_type,
 ('Mercedes', 'E-Class', 2024, 'MER-2345', 'Sedan', 'Petrol', 'Automatic', 5, 90.00, 'AVAILABLE', '/resources/images/vehicles/Mercedes-Benz-E-Class.jpg', 'Executive sedan with unmatched comfort'),
 ('Chevrolet', 'Tahoe', 2023, 'CHE-6789', 'SUV', 'Petrol', 'Automatic', 8, 80.00, 'AVAILABLE', '/resources/images/vehicles/Chevrolet-Tahoe.jpg', 'Large SUV ideal for group travel');
 
--- Sample User Data
 INSERT INTO users (username, password, email, full_name, phone) VALUES
 ('admin', 'admin123', 'admin@gmail.com', 'Admin', '+1-555-0101'),
 ('nancy', 'nancy29', 'nancy29', 'Nancy', '9876543210');
